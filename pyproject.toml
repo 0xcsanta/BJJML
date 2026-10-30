@@ -9,14 +9,14 @@ description = "Moteur de recommandation de mouvements en jiu-jitsu bresilien no-
 readme = "README.md"
 requires-python = ">=3.11"
 license = { file = "LICENSE" }
-# Phase 0 : les scripts de fetch n'utilisent que la bibliotheque standard.
-dependencies = []
+# Les scripts de fetch n'utilisent que la bibliotheque standard : les sources
+# se recuperent avant meme d'avoir installe quoi que ce soit.
+# numpy et PyYAML servent au parser GrappleMap et a l'ontologie (phase 1).
+dependencies = ["numpy>=1.26", "PyYAML>=6.0"]
 
 [project.optional-dependencies]
-# Phase 1 — ontologie
-ontology = ["PyYAML>=6.0"]
 # Phase 2 — premier modele
-model = ["numpy", "pandas", "scikit-learn", "torch", "matplotlib"]
+model = ["pandas", "scikit-learn", "torch", "matplotlib"]
 dev = ["pytest"]
 
 [tool.setuptools.packages.find]

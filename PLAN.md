@@ -190,9 +190,14 @@ Sortie : 1 des 10 positions. Un petit MLP suffit, ça tourne sur CPU.
 
 - **Le split est le cœur de l'exercice : par séquence, jamais par frame.** Deux frames consécutives à
   30 fps sont la même image ; un split aléatoire donnerait 99 % d'accuracy qui ne veut rien dire.
-  En pratique, le champ `image` d'`annotations.json` vaut par exemple `"0000001"` : **2 chiffres de
-  séquence puis 5 de frame.** Le groupe de split, c'est donc `image[:2]` — 6 valeurs possibles, ce qui
-  rend le peu de diversité du jeu de données impossible à ignorer.
+  En pratique, le champ `image` d'`annotations.json` vaut par exemple `"0000001"` : **2 chiffres
+  d'identifiant de vue puis 5 de frame.** Attention, le piège est plus subtil qu'il n'y paraît : il y a
+  **16 vues mais seulement 6 combats**, parce que chaque roll a été filmé par jusqu'à 3 caméras.
+  Vérifié en comparant les timelines de labels frame par frame — l'accord est de 98 à 100 % entre deux
+  vues d'un même roll, et de 0 à 5 % entre deux rolls différents. **Le groupe de split est donc le
+  roll, pas la vue** (`jjbml.parsers.vicos.roll()`), sinon le même instant du même combat, filmé d'un
+  autre angle, passe de l'entraînement au test. Et 6 groupes, c'est la vraie mesure de la diversité
+  de ce jeu de données : pas 120 279 exemples, six combats.
 - Baselines obligatoires avant le réseau : classe majoritaire, puis régression logistique
 - Métriques : accuracy équilibrée + matrice de confusion (les classes sont très déséquilibrées)
 - Normalisation des poses (centrer, mettre à l'échelle) — sinon le modèle apprend la position dans le cadre
