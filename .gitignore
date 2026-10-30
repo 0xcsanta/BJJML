@@ -2,8 +2,13 @@
 # Donnees tierces : AUCUNE n'entre dans Git. Jamais.
 # Le depot contient la recette (scripts de fetch), jamais les ingredients.
 # Voir PLAN.md, section 3.
+#
+# La barre oblique initiale est indispensable : sans elle, `data/` exclurait
+# TOUT dossier nomme data a n'importe quelle profondeur, y compris le module
+# src/jjbml/data/. C'est arrive, le depot est parti sans son module, et la
+# regle 6 du hook pre-commit est la pour que ca ne se reproduise pas.
 # ---------------------------------------------------------------------------
-data/
+/data/
 
 # ---------------------------------------------------------------------------
 # Garde-fou medias : une frame de match est une reproduction d'oeuvre protegee.

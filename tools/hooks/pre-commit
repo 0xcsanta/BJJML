@@ -64,4 +64,13 @@ if [ ! -f ATTRIBUTIONS.md ]; then
     fail "ATTRIBUTIONS.md absent — chaque source tierce doit y etre inventoriee."
 fi
 
+# 6. Aucun source Python ignore par megarde ---------------------------------
+# Un .gitignore trop large peut exclure un module : `data/` sans barre oblique
+# initiale excluait src/jjbml/data/. Le depot partait alors sans son code, et
+# rien ne le signalait puisque les fichiers existaient en local.
+oublies=$(git ls-files --others --ignored --exclude-standard -- 'src/*' 2>/dev/null | grep '\.py$')
+if [ -n "$oublies" ]; then
+    fail "source(s) Python ignore(s) par .gitignore : $(echo "$oublies" | tr '\n' ' ')"
+fi
+
 exit 0
