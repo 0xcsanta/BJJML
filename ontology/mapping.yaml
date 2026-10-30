@@ -1,0 +1,124 @@
+# Table de correspondance entre les trois vocabulaires.
+#
+# C'est la piece centrale du projet : les trois sources parlent des memes
+# positions avec des mots differents, et personne ne les avait reliees.
+#
+#   vicos       les 18 classes du dataset (suffixe 1/2 = quel athlete)
+#   bjjgraph    les hubs, parmi les 133 (chacun decline en Top / Bottom)
+#   grapplemap  les tags, parmi les 161
+#
+# `bjjgraph_gi` liste a part les hubs qui n'existent qu'avec le kimono : ils
+# sont notes pour que la table reste complete, mais le projet etant no-gi, ils
+# ne servent pas.
+#
+# Regle de lecture : un nom de source ne peut appartenir qu'a UNE position
+# canonique. Le loader le verifie et refuse de demarrer sinon.
+
+version: 1
+
+correspondances:
+
+  standing:
+    vicos: [standing]
+    bjjgraph: [standing-position, standing-guard, clinch, standing-rear-clinch,
+               double-unders, body-lock]
+    grapplemap: [standing]
+
+  takedown:
+    vicos: [takedown1, takedown2]
+    # bjjgraph ne modelise pas les takedowns comme des positions mais comme des
+    # transitions : il n'y a donc rien a mettre ici, et ce n'est pas un oubli.
+    bjjgraph: []
+    grapplemap: [single_leg_takedown, double_leg_takedown, ankle_pick, throw,
+                 trip, inside_trip, sprawl, duck_under, knee_pick, takedown,
+                 te_waza, ashi_waza, koshi_waza, sutemi_waza, sacrifice_throw]
+
+  open_guard:
+    vicos: [open_guard1, open_guard2]
+    bjjgraph: [open-guard, butterfly-guard, de-la-riva-guard,
+               reverse-de-la-riva-guard, x-guard, single-leg-x-guard,
+               reverse-x-guard, k-guard, seated-guard, shin-to-shin-guard,
+               feet-on-hips-guard, squid-guard, diamond-guard, clamp-guard,
+               inverted-guard, piranha-guard, butterfly-hook-control]
+    bjjgraph_gi: [spider-guard, lasso-guard, inverted-lasso-guard,
+                  collar-sleeve-guard, double-sleeve-guard, lapel-guard,
+                  worm-guard, williams-guard, ringworm-guard]
+    grapplemap: [butterfly, engaged_butterfly, reverse_butterfly, x_guard,
+                 slx, ashi, inverted_guard, octopus, spider_guard]
+
+  closed_guard:
+    vicos: [closed_guard1, closed_guard2]
+    bjjgraph: [closed-guard, rubber-guard, mission-control, overhook-guard]
+    grapplemap: [closed_guard, full_guard, rubber_guard]
+
+  half_guard:
+    vicos: [half_guard1, half_guard2]
+    bjjgraph: [half-guard, deep-half-guard, knee-shield-half-guard, z-guard,
+               z-lock-half-guard, butterfly-half-guard, flattened-half-guard,
+               pocket-half-guard, quarter-guard, reverse-half-guard, lockdown,
+               dogfight-position, half-butterfly, old-school]
+    grapplemap: [half_guard, deep_half, quarter_guard, lockdown, reverse_half,
+                 z_guard, knee_shield, dogfight, three_quarter_guard]
+
+  side_control:
+    vicos: [side_control1, side_control2]
+    bjjgraph: [side-control, north-south, knee-on-belly, kesa-gatame,
+               kuzure-kesa-gatame, ushiro-kesa-gatame, twister-side-control]
+    grapplemap: [side_control, side_ctrl, north_south, knee_on_belly,
+                 twister_side, judo_side, headlock]
+
+  mount:
+    vicos: [mount1, mount2]
+    bjjgraph: [mount, high-mount, s-mount, technical-mount, modified-mount,
+               3-4-mount, reverse-mount, mounted-crucifix, mounted-triangle]
+    grapplemap: [mount, s_mount, three_quarter_mount]
+
+  back:
+    vicos: [back1, back2]
+    bjjgraph: [back-control, seat-belt-control-back, standing-back-control,
+               body-triangle, harness, truck, crab-ride, rodeo-ride,
+               cross-body-ride]
+    grapplemap: [back, seatbelt, lower_back_control, crab_ride, truck, leg_ride]
+
+  turtle:
+    vicos: [turtle1, turtle2]
+    bjjgraph: [turtle, front-headlock, crucifix, gift-wrap]
+    grapplemap: [turtle, all_fours, crucifix]
+
+  5050_guard:
+    vicos: [5050_guard]
+    bjjgraph: [50-50-guard, backside-50-50]
+    grapplemap: ["50_50"]
+
+# ---------------------------------------------------------------------------
+# Le role, chez ViCoS, est porte par le suffixe de la classe : le chiffre
+# designe l'athlete 1 ou 2, pas « dessus » ou « dessous ». Savoir lequel des
+# deux est dessus demande de regarder la pose, pas le label.
+#
+# Chez bjjgraph le role est explicite (champ `role` : top / bottom), et chez
+# GrappleMap il se lit dans les tags d'orientation (top_kneeling,
+# bottom_supine...). Les trois sources ne codent donc pas le role de la meme
+# facon, et c'est la principale difficulte restante de cette table.
+# ---------------------------------------------------------------------------
+
+roles:
+  vicos:
+    note: >
+      Le suffixe 1/2 identifie l'athlete, pas sa position relative. Pour
+      `mount1`, c'est l'athlete 1 qui est dessus ; pour `closed_guard1`, c'est
+      l'athlete 1 qui tient la garde, donc dessous. La convention est par
+      position, pas globale.
+    dessus_est_le_suffixe:
+      takedown: initiateur
+      open_guard: adversaire
+      closed_guard: adversaire
+      half_guard: adversaire
+      side_control: suffixe
+      mount: suffixe
+      back: suffixe
+      turtle: suffixe
+  bjjgraph:
+    champ: role
+    valeurs: [top, bottom]
+  grapplemap:
+    note: Lu dans les tags d'orientation prefixes top_ et bottom_.

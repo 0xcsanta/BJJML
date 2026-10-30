@@ -1,0 +1,117 @@
+# Hierarchie positionnelle : la fonction de valeur du moteur.
+#
+# ATTENTION, CE FICHIER EST UN BROUILLON A CORRIGER.
+#
+# En no-gi il n'existe pas de systeme de points comme l'IBJJF, donc cette
+# echelle remplace la fonction de valeur qu'on n'a pas. Elle sort d'un jugement
+# de pratiquant, pas d'une mesure : c'est a toi de la trancher, et c'est
+# normal, parce qu'elle encode ta comprehension du jeu.
+#
+# ECHELLE : 0 a 1, du point de vue du role indique.
+#   0.0  perdu ou presque
+#   0.5  neutre, personne n'a l'avantage
+#   1.0  gagne ou presque
+#
+# Les deux roles d'une meme position n'ont AUCUNE raison de sommer a 1 : une
+# position peut etre mauvaise pour les deux (debout sans prise, fatigue) ou
+# bonne pour les deux (chacun a ses attaques).
+#
+# La colonne `bjjgraph_strength` donne, pour comparaison, l'estimation du cote
+# dessus publiee par bjjgraph, sur une echelle d'environ -1 a 1.
+# CE N'EST PAS UNE VERITE TERRAIN : ce sont des valeurs ecrites a la main, non
+# mesurees et non validees, de l'aveu meme de leur README. Elles sont ici
+# uniquement pour te montrer ou ton jugement diverge du leur.
+
+version: 1
+etat: brouillon
+revise_par: null       # mettre ton nom quand tu auras relu
+revise_le: null
+
+valeurs:
+
+  standing:
+    neutre: 0.50
+    bjjgraph_strength: -0.186
+    pourquoi: Position de depart, symetrique. Tout reste a faire.
+
+  takedown:
+    dessus: 0.65
+    dessous: 0.35
+    bjjgraph_strength: null      # pas de hub takedown chez eux
+    pourquoi: >
+      Transitoire. Celui qui entre a l'avantage mais rien n'est acquis : une
+      amenee ratee peut finir dos pris.
+
+  open_guard:
+    dessous: 0.45
+    dessus: 0.55
+    bjjgraph_strength: 0.295
+    pourquoi: >
+      En no-gi la garde ouverte est fragile sans prises de kimono, mais c'est
+      aussi d'ou partent les entrees de jambes. A discuter : certains la
+      mettraient au-dessus de la garde fermee.
+
+  closed_guard:
+    dessous: 0.50
+    dessus: 0.50
+    bjjgraph_strength: -0.245
+    pourquoi: >
+      LE PLUS DISCUTABLE DU FICHIER. Je la mets neutre : le joueur de garde
+      controle la distance, mais en no-gi il attaque peu. bjjgraph la juge
+      nettement defavorable au joueur du dessus, ce qui est un point de vue
+      plutot gi. A trancher.
+
+  half_guard:
+    dessous: 0.40
+    dessus: 0.60
+    bjjgraph_strength: 0.130
+    pourquoi: >
+      La demi-garde dessous est une position de retard : on a deja concede le
+      passage partiel, et il faut recuperer underhook ou cadre.
+
+  side_control:
+    dessus: 0.80
+    dessous: 0.20
+    bjjgraph_strength: 0.328
+    pourquoi: >
+      Garde depassee, controle etabli. Mauvais a subir, mais on en sort plus
+      souvent que du mount.
+
+  mount:
+    dessus: 0.90
+    dessous: 0.10
+    bjjgraph_strength: 0.629
+    pourquoi: Controle dominant, attaques nombreuses, echappatoires couteuses.
+
+  back:
+    dessus: 0.95
+    dessous: 0.05
+    bjjgraph_strength: 0.570
+    pourquoi: >
+      Le sommet de la hierarchie en no-gi : l'etranglement arriere est la
+      soumission la plus fiable, et celui qui subit ne voit rien.
+      bjjgraph place le dos SOUS le mount, ce qui me parait discutable.
+
+  turtle:
+    dessous: 0.25
+    dessus: 0.75
+    bjjgraph_strength: 0.004
+    pourquoi: >
+      DESACCORD LE PLUS FRANC AVEC bjjgraph, qui juge la tortue neutre. En
+      no-gi, etre en tortue sous quelqu'un, c'est offrir le dos : je la mets
+      nettement defavorable.
+
+  5050_guard:
+    neutre: 0.50
+    bjjgraph_strength: -0.056
+    pourquoi: Symetrique par construction, donc neutre par construction.
+
+# ---------------------------------------------------------------------------
+# Ce que cette echelle ne dit pas encore, et qu'il faudra ajouter :
+#   - le cout energetique (tenir un mount fatigue moins que de le subir)
+#   - le risque : une position peut etre bonne en moyenne et s'effondrer vite
+#   - la dependance au gabarit et au style
+#   - les modificateurs : « dos pris AVEC crochets » n'est pas « dos pris »
+# Ces dimensions existent deja chez bjjgraph (riskLevel, energyCost) ; on les
+# reprendra quand la phase 5 en aura besoin.
+# ---------------------------------------------------------------------------

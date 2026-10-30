@@ -1,0 +1,146 @@
+# Taxonomie canonique du projet.
+#
+# Dix positions, celles que l'etage A sait reellement predire : c'est le
+# vocabulaire de ViCoS. Commencer plus fin produirait une ontologie que rien ne
+# peut alimenter.
+#
+# L'extensibilite passe par deux endroits :
+#   - `affinements` : les variantes plus fines, deja nommees, qu'on activera
+#     quand la perception saura les distinguer. Elles sont declarees ici mais
+#     aucune n'est utilisee pour l'instant.
+#   - `modificateurs` : le vocabulaire des prises et configurations, repris de
+#     GrappleMap. C'est ce qui manque a ViCoS et ce qui fait la difference entre
+#     « tu es en side control » et « quoi faire ».
+#
+# Le role dit de quel cote on parle. `dessus` / `dessous` pour les positions
+# asymetriques, `neutre` quand les deux cotes sont equivalents.
+
+version: 1
+
+positions:
+  standing:
+    nom: Debout
+    roles: [neutre]
+    description: Les deux athletes debout, aucun engagement au sol.
+    affinements: [clinch, standing_guard, rear_clinch, body_lock]
+
+  takedown:
+    nom: Amenee au sol
+    roles: [dessus, dessous]
+    description: >
+      Une amenee au sol en cours. C'est un etat transitoire, pas une position
+      stable : ViCoS en fait une classe, bjjgraph en fait une transition.
+    affinements: [single_leg, double_leg, ankle_pick, throw, trip, sprawl]
+
+  open_guard:
+    nom: Garde ouverte
+    roles: [dessous, dessus]
+    description: Garde sans crochet des jambes, le joueur de garde est au sol.
+    affinements:
+      [butterfly, de_la_riva, reverse_de_la_riva, x_guard, single_leg_x,
+       k_guard, seated_guard, shin_to_shin, inverted_guard]
+
+  closed_guard:
+    nom: Garde fermee
+    roles: [dessous, dessus]
+    description: Jambes croisees et fermees autour du tronc de l'adversaire.
+    affinements: [rubber_guard, high_guard, overhook_guard]
+
+  half_guard:
+    nom: Demi-garde
+    roles: [dessous, dessus]
+    description: Une jambe de l'adversaire retenue entre les jambes.
+    affinements:
+      [deep_half, knee_shield, z_guard, lockdown, quarter_guard,
+       reverse_half, butterfly_half, dogfight]
+
+  side_control:
+    nom: Controle lateral
+    roles: [dessus, dessous]
+    description: >
+      Controle perpendiculaire, garde depassee. Englobe north-south et
+      knee-on-belly, que ViCoS ne distingue pas.
+    affinements: [north_south, knee_on_belly, kesa_gatame, twister_side]
+
+  mount:
+    nom: Montee
+    roles: [dessus, dessous]
+    description: A cheval sur le tronc de l'adversaire.
+    affinements: [high_mount, s_mount, technical_mount, reverse_mount]
+
+  back:
+    nom: Controle du dos
+    roles: [dessus, dessous]
+    description: >
+      Controle depuis le dos. Attention : ViCoS ne garantit pas la presence des
+      crochets, ce qui change pourtant tout au conseil a donner.
+    affinements: [seatbelt, body_triangle, truck, crab_ride, standing_back]
+
+  turtle:
+    nom: Tortue
+    roles: [dessous, dessus]
+    description: A quatre pattes, replie, l'adversaire au-dessus ou derriere.
+    affinements: [front_headlock, crucifix, gift_wrap]
+
+  5050_guard:
+    nom: Garde 50-50
+    roles: [neutre]
+    description: >
+      Enchevetrement de jambes symetrique. Les deux athletes ont la meme
+      position, d'ou le role neutre et la classe unique chez ViCoS.
+    affinements: [backside_50_50, inside_sankaku]
+
+# ---------------------------------------------------------------------------
+# Modificateurs : le vocabulaire des prises et configurations, repris des tags
+# GrappleMap. C'est le crochet d'extensibilite : une position seule ne suffit
+# pas a conseiller, une position plus ses modificateurs si.
+# Aucun n'est utilise par l'etage A aujourd'hui : il faudra soit que la
+# perception sache les voir, soit que l'utilisateur les declare lui-meme.
+# ---------------------------------------------------------------------------
+
+modificateurs:
+  prises:
+    underhook: Passage du bras sous celui de l'adversaire.
+    overhook: Bras par-dessus celui de l'adversaire.
+    crossface: Avant-bras en travers du visage, pour casser la posture.
+    collar_tie: Main derriere la nuque, debout.
+    wrist_control: Controle du poignet.
+    two_on_one: Les deux mains sur un bras.
+    whizzer: Surcrochet serre contre une amenee au sol.
+    seatbelt: Un bras sous l'aisselle, l'autre sur l'epaule, depuis le dos.
+    body_lock: Les bras verrouilles autour du tronc.
+    vice_grip: Mains jointes autour de la tete et d'un bras.
+  configurations:
+    frame: Cadre des bras pour creer de l'espace.
+    knee_shield: Genou en travers pour tenir l'adversaire a distance.
+    lockdown: Jambe de l'adversaire verrouillee en demi-garde.
+    grapevine: Jambes enroulees autour de celles de l'adversaire.
+    posture_broken: Posture de l'adversaire cassee vers l'avant.
+    stacked: Hanches soulevees et repliees sur soi.
+  orientations:
+    supine: Sur le dos.
+    prone: A plat ventre.
+    turned_in: Tourne vers l'adversaire.
+    turned_away: Tourne dos a l'adversaire.
+    seated: Assis.
+    kneeling: A genoux.
+
+# ---------------------------------------------------------------------------
+# Ce que cette taxonomie NE couvre PAS, et c'est important de l'ecrire.
+# ---------------------------------------------------------------------------
+
+non_couvert:
+  - cle: enchevetrements_de_jambes
+    quoi: >
+      ashi garami, saddle, honey hole, outside ashi, inside sankaku. ViCoS n'a
+      aucun mot pour ca : ces situations tombent dans open_guard ou 5050_guard.
+    consequence: >
+      C'est un angle mort majeur pour un moteur no-gi, ou le jeu de jambes est
+      central. A traiter des que la granularite augmente.
+  - cle: controles_de_tete
+    quoi: front headlock, guillotine control, darce control.
+    consequence: Classes turtle ou standing par ViCoS, alors que le conseil differe.
+  - cle: soumissions
+    quoi: >
+      Aucune soumission n'est une position ici. bjjgraph en recense 923 ; elles
+      relevent de l'etage C, comme etats terminaux.
