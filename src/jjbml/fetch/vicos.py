@@ -51,10 +51,10 @@ def main(argv: list[str] | None = None) -> None:
     fichiers = [download(ANNOTATIONS, d / "annotations.json")]
 
     if args.images:
-        print(f"  images.zip fait {human(TAILLE_IMAGES)} — ca va etre long.")
+        print(f"  images.zip fait {human(TAILLE_IMAGES)} - ca va etre long.")
         fichiers.append(download(IMAGES, d / "images.zip", expected_size=TAILLE_IMAGES))
     else:
-        print(f"  images.zip ({human(TAILLE_IMAGES)}) ignore — relancer avec --images si besoin.")
+        print(f"  images.zip ({human(TAILLE_IMAGES)}) ignore - relancer avec --images si besoin.")
 
     record(
         "vicos",
