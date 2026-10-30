@@ -1,0 +1,4 @@
+* text=auto eol=lf
+tools/hooks/pre-commit text eol=lf
+*.png binary
+*.jpg binary

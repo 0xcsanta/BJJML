@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jjbml"
+version = "0.1.0"
+description = "Moteur de recommandation de mouvements en jiu-jitsu bresilien no-gi"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+# Phase 0 : les scripts de fetch n'utilisent que la bibliotheque standard.
+dependencies = []
+
+[project.optional-dependencies]
+# Phase 1 — ontologie
+ontology = ["PyYAML>=6.0"]
+# Phase 2 — premier modele
+model = ["numpy", "pandas", "scikit-learn", "torch", "matplotlib"]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

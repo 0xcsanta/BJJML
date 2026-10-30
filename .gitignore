@@ -1,0 +1,59 @@
+# ---------------------------------------------------------------------------
+# Donnees tierces : AUCUNE n'entre dans Git. Jamais.
+# Le depot contient la recette (scripts de fetch), jamais les ingredients.
+# Voir PLAN.md, section 3.
+# ---------------------------------------------------------------------------
+data/
+
+# ---------------------------------------------------------------------------
+# Garde-fou medias : une frame de match est une reproduction d'oeuvre protegee.
+# Un timestamp est un fait, et un fait ne l'est pas : seules les annotations
+# (video_id + timestamp + label) sont commitables, sous annotations/.
+# Une exception justifiee se fait a la main (git add -f) ET s'inscrit dans
+# ATTRIBUTIONS.md.
+# ---------------------------------------------------------------------------
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+*.bmp
+*.tiff
+*.mp4
+*.mov
+*.mkv
+*.avi
+*.webm
+*.zip
+*.gz
+*.tar
+*.7z
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ---------------------------------------------------------------------------
+# Modeles entraines : volumineux, et s'ils sont entraines sur ViCoS leur
+# redistribution est soumise a CC BY-NC-SA 4.0 (cf. PLAN.md, regle 6).
+# ---------------------------------------------------------------------------
+*.pt
+*.pth
+*.onnx
+*.ckpt
+
+# ---------------------------------------------------------------------------
+# Environnement de travail
+# ---------------------------------------------------------------------------
+.env
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

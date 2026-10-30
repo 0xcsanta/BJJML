@@ -1,0 +1,67 @@
+#!/bin/sh
+# Hook de conformite jjb-ML — voir PLAN.md, section 3.
+#
+# Installation : git config core.hooksPath tools/hooks
+#
+# Ce hook refuse tout commit qui ferait entrer une donnee tierce dans le depot.
+# L'objectif est que la conformite ne repose pas sur la vigilance humaine :
+# c'est Git qui dit non.
+
+fail() {
+    echo "" >&2
+    echo "COMMIT REFUSE — conformite jjb-ML" >&2
+    echo "  $1" >&2
+    echo "" >&2
+    echo "  Regles : PLAN.md, section 3." >&2
+    echo "  Si l'exception est justifiee : git add -f, et inscrire la source" >&2
+    echo "  dans ATTRIBUTIONS.md avant de recommencer." >&2
+    exit 1
+}
+
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+if [ -z "$staged" ]; then
+    exit 0
+fi
+
+# 1. Aucune donnee tierce ---------------------------------------------------
+if echo "$staged" | grep -qE '^data/'; then
+    fail "un fichier sous data/ est indexe. Les donnees tierces n'entrent jamais dans Git."
+fi
+
+# 2. Aucun media ni archive -------------------------------------------------
+media=$(echo "$staged" | grep -iE '\.(jpg|jpeg|png|gif|webp|bmp|tiff|mp4|mov|mkv|avi|webm|zip|gz|tar|7z)$')
+if [ -n "$media" ]; then
+    fail "media ou archive indexe : $(echo "$media" | tr '\n' ' ')"
+fi
+
+# 3. Aucun fichier volumineux ----------------------------------------------
+# Garde-fou contre un dataset commite par inadvertance.
+big=""
+while IFS= read -r f; do
+    [ -n "$f" ] || continue
+    blob=$(git rev-parse ":$f" 2>/dev/null) || continue
+    size=$(git cat-file -s "$blob" 2>/dev/null) || continue
+    if [ "$size" -gt 1048576 ]; then
+        big="$big $f ($size octets)"
+    fi
+done <<STAGED_EOF
+$staged
+STAGED_EOF
+if [ -n "$big" ]; then
+    fail "fichier(s) de plus de 1 Mo indexe(s) :$big"
+fi
+
+# 4. La citation ViCoS doit rester dans le README ---------------------------
+if [ ! -f README.md ]; then
+    fail "README.md absent — la citation ViCoS exigee par CC BY-NC-SA 4.0 doit y figurer."
+fi
+if ! grep -q "Hudovernik" README.md; then
+    fail "la citation ViCoS (Hudovernik) a disparu du README.md. Elle est exigee par la licence."
+fi
+
+# 5. ATTRIBUTIONS.md doit exister -------------------------------------------
+if [ ! -f ATTRIBUTIONS.md ]; then
+    fail "ATTRIBUTIONS.md absent — chaque source tierce doit y etre inventoriee."
+fi
+
+exit 0
