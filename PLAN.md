@@ -198,13 +198,25 @@ Sortie : 1 des 10 positions. Un petit MLP suffit, ça tourne sur CPU.
   roll, pas la vue** (`jjbml.parsers.vicos.roll()`), sinon le même instant du même combat, filmé d'un
   autre angle, passe de l'entraînement au test. Et 6 groupes, c'est la vraie mesure de la diversité
   de ce jeu de données : pas 120 279 exemples, six combats.
+  **Correction apportée en phase 2 :** le split par roll s'est révélé carrément *impossible*. Chaque
+  roll est consacré à un petit groupe de positions — le dos n'existe que dans le roll 5, la tortue
+  que dans le roll 3 — donc en écarter un retire ses classes de l'entraînement, et 11 classes sur 18
+  se retrouvent à devoir être prédites sans jamais avoir été vues. Le seul protocole utilisable est
+  **leave-one-view-out** : on écarte une caméra par roll. Il mesure la généralisation à un nouvel
+  angle, pas à un nouveau combat, et tout chiffre qui en sort est un majorant optimiste.
 - Baselines obligatoires avant le réseau : classe majoritaire, puis régression logistique
 - Métriques : accuracy équilibrée + matrice de confusion (les classes sont très déséquilibrées)
 - Normalisation des poses (centrer, mettre à l'échelle) — sinon le modèle apprend la position dans le cadre
 - Lire le papier MMSports'22 pour fixer la cible à atteindre
 
-**Fini quand :** le réseau bat la régression logistique sur des **séquences jamais vues**, et tu sais
-expliquer chaque case de la matrice de confusion.
+**FAIT.** Résultats détaillés dans [results/phase2.md](results/phase2.md), reproductibles par
+`python -m jjbml.experiences.phase2`. En leave-one-view-out, accuracy équilibrée sur 18 classes :
+classe majoritaire 0,056 — régression logistique 0,634 — **MLP 0,746**. Un split naïf par image
+aurait annoncé 0,875, soit 13 points de pure fuite. Les confusions sont anatomiquement cohérentes
+(mount, side control et demi-garde se mélangent entre elles, comme dans le vrai passage de garde).
+Et le plafond est ailleurs : **0,877 quand les deux athlètes sont détectés, 0,516 quand un seul
+l'est.** Le facteur limitant n'est pas le classifieur, c'est l'estimation de pose sur corps
+enchevêtrés — donc inutile d'empiler des couches.
 
 **Ce que tu apprends :** la fuite de données, le vrai sens d'un split, le déséquilibre de classes.
 C'est la leçon la plus importante du projet et elle arrive tôt.

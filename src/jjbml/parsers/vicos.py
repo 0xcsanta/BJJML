@@ -54,6 +54,14 @@ VUE_VERS_ROLL: dict[str, int] = {
     vue: i for i, vues in enumerate(ROLLS) for vue in vues
 }
 
+# Rang de la camera a l'interieur de son roll : 0, 1 ou 2.
+# Sert au seul protocole d'evaluation que ce jeu de donnees peut supporter
+# (voir jjbml.data.vicos), celui qui tient une camera a l'ecart.
+RANG_DE_VUE: dict[str, int] = {
+    vue: rang for vues in ROLLS for rang, vue in enumerate(vues)
+}
+NB_RANGS = max(len(v) for v in ROLLS)
+
 # Les 18 classes, et la position de fond que chacune designe.
 CLASSES: dict[str, tuple[str, int | None]] = {
     "standing": ("standing", None),
